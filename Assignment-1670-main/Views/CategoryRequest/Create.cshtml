@@ -1,0 +1,27 @@
+﻿@model Assignment.Models.CategoryRequest
+
+<div class="container col-md-6 text-center mt-3">
+       @if (@TempData["Message"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Message"]</p>
+    }
+    <form class="card p-3 bg-light" asp-controller="CategoryRequest" asp-action="Create" method="post">
+        <h3 class="text text-primary">Create new category request</h3>
+        <div class="form-group">
+            <label asp-for="Category" class="text text-success"></label>
+            <input asp-for="Category" class="form-control" />
+            <span asp-validation-for="Category" class="text text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Message" class="text text-success"></label>
+            <input asp-for="Message" class="form-control" />
+            <span asp-validation-for="Message" class="text text-danger"></span>
+        </div>
+         <div class="form-group">
+            <input type="hidden" value="0" asp-for="Status"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Request" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,49 @@
+﻿@model ICollection<CategoryRequest>
+
+<div class="container text-center mt-3">
+    @if (@TempData["Message"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Message"]</p>
+    }
+    <table class="table table-bordered">
+        <tr>
+            <th colspan="5" class="h3 bg-light text-success">Request List</th>
+        </tr>
+        <tr>
+            <th>Request Id</th>
+            <th>Category Name</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.Id</td>
+                <td>@request.Category</td>
+                <td>@request.Message</td>
+                @if (request.Status == 0)
+                {
+                    <td> <p class="text text-warning">Pending</p> </td>
+                             <td>
+                    <a class="btn btn-warning" asp-controller="CategoryRequest" asp-action="Approved" asp-route-id="@request.Id">
+                        Approve
+                    </a>
+                    <a class="btn btn-danger" asp-controller="CategoryRequest" asp-action="Rejected" asp-route-id="@request.Id"
+                   onclick="return confirm('Are you sure to reject this category ?');">
+                        Reject
+                    </a>
+                </td>
+                }
+                else if (request.Status == 1)
+                {
+                    <td> <p class="text text-success">Approved</p> </td>
+                }
+                else if (request.Status == -1)
+                {
+                    <td> <p class="text text-danger">Rejected</p> </td>
+                }
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,36 @@
+﻿@model ICollection<Book>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link href="~/css/site.css" rel="stylesheet" type="text/css" />
+<div class="text-center">
+    <h1 class="display-4">Welcome to <span class="text text-primary font-italic font-weight-bold" >F</span><span class="text text-warning font-weight-bold font-italic">P</span><span class="text text-success font-weight-bold font-italic">T</span> Book Store</h1>
+</div>
+<div class="text-center">
+    <img src="https://cdn2.lamag.com/wp-content/uploads/sites/6/2016/12/clay-banks-765259-unsplash.jpg" height="500" />
+    <h1 class="display-4">Lastest Product !</h1>
+</div>
+
+@if (Model.Count == 0)
+{
+    <h4 class="text text-danger text-center"> No book found !</h4>
+}
+<div class=" text-center card-group">
+    <div class="row">
+        @foreach (var book in Model.Take(4))
+        {
+            <div class="col-md-3 p-3">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="@book.Image">
+                        <h4 class="text text-primary mt-3">@book.Title</h4>
+
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+</div>

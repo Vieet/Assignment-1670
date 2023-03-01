@@ -1,0 +1,86 @@
+﻿@model List<Assignment.Models.CartItem>
+
+<h2>Shopping Cart</h2>
+@if (@TempData["Message"] != null)
+{
+    <p class="alert alert-danger">@TempData["Message"]</p>
+}
+@if (Model.Count > 0)
+{
+    double total = 0;
+    int number = 1;
+
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>Book</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sub-Total</th>
+            <th></th>
+        </tr>
+        @foreach (var cartitem in Model)
+        {
+            var amount = cartitem.quantity * cartitem.book.Price;
+            total += amount;
+
+            <tr>
+                <td>@(number++)</td>
+                <td>@cartitem.book.Title</td>
+                <td>@cartitem.book.Price</td>
+                <td><input asp-for="@cartitem.quantity" id="@($"quantity-{cartitem.book.Id}")" min="1" max="@cartitem.book.Quantity" /></td>
+                <td>@amount</td>
+                <td>
+                    <button class="btn btn-success updatecartitem"
+                    data-bookid="@cartitem.book.Id">
+                        Update
+                    </button>
+                    <a asp-route="removecart" asp-route-bookid="@cartitem.book.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4" class="text-right">Total Price</td>
+            <td>@total</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <form asp-controller="Cart" asp-action="MakeOrder">
+        <input type="hidden" name="id" />
+        <input type="hidden" name="id" />
+        <div class="form-group mt-3">
+            <input type="submit" class="btn btn-success" value="Purchase"
+               onclick="    return confirm('Are you sure to request this order ?');" />
+        </div>
+    </form>
+
+
+    @section Scripts {
+    <script>
+        $(document).ready(function() {
+            $(".updatecartitem").click(function(event) {
+                event.preventDefault();
+                var bookid = $(this).attr("data-bookid");
+                var quantity = $("#quantity-" + bookid).val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.RouteUrl("updatecart")",
+                    data: {
+                        bookid: bookid,
+                        quantity: quantity
+                    },
+                    success: function(result) {
+                        window.location.href = "@Url.RouteUrl("cart")";
+                    }
+                });
+            });
+        });
+    </script>
+    }
+
+}
+else
+{
+    <p class="alert alert-danger">No product added !</p>
+}

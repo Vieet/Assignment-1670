@@ -1,0 +1,133 @@
+﻿@using System.Security.Claims
+@model ICollection<Order>
+@{
+    ClaimsPrincipal currentUser = this.User;
+    var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+
+<div class="container text-center mt-3">
+    @if (@TempData["Message"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Message"]</p>
+    }
+    @if ((User.Identity.IsAuthenticated) && (User.IsInRole("StoreOwner")))
+    {
+        <div class="col">
+            <form asp-controller="Order" asp-action="Search" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="search" required name="keyword" placeholder="Search user by Email" />
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <h4>Filter</h4>
+        <a class="btn btn-success" asp-controller="Order" asp-action="Filter" asp-route-status=1>Approved</a>
+        <a class="btn btn-warning" asp-controller="Order" asp-action="Filter" asp-route-status=0>Pending</a>
+        <a class="btn btn-danger" asp-controller="Order" asp-action="Filter" asp-route-status=-1>Reject</a>
+        </div>
+    }
+
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th colspan="6" class="h3 bg-light text-success">Order List: @Model.Count</th>
+        </tr>
+        <tr>
+            <th>Order Id</th>
+            <th>User</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Action</th>
+            <th>Menu</th>
+        </tr>
+        @foreach (var order in Model)
+        {
+            if ((User.Identity.IsAuthenticated) && (User.IsInRole("Customer")) && (string)order.UserId == currentUserID)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        if (user.Id == order.UserId)
+                        {
+                            <td>@user.Email</td>
+                        }
+                    }
+                    <td>
+                        @order.Total
+                    </td>
+                    @if (order.Status == 0)
+                    {
+                        <td> <p class="text text-warning">Pending</p> </td>
+                    }
+                    else if (order.Status == 1)
+                    {
+                        <td> <p class="text text-success">Approved</p> </td>
+
+                    }
+                    else if (order.Status == -1)
+                    {
+                        <td> <p class="text text-danger">Rejected</p> </td>
+
+                    }
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Order" asp-action="Detail" asp-route-id="@order.Id">
+                            Detail
+                        </a>
+                        <a class="btn btn-danger" asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+            else if ((User.Identity.IsAuthenticated) && (User.IsInRole("StoreOwner")))
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        if (user.Id == order.UserId)
+                        {
+                            <td>@user.Email</td>
+                        }
+                    }
+                    <td>
+                        @order.Total
+                    </td>
+                    @if (order.Status == 0)
+                    {
+                        <td> <p class="text text-warning">Pending</p> </td>
+                        <td>
+                            <a class="btn btn-success" asp-controller="Order" asp-action="Approved" asp-route-id="@order.Id">
+                                Approve
+                            </a>
+                            <a class="btn btn-danger" asp-controller="Order" asp-action="Rejected" asp-route-id="@order.Id"
+                   onclick="return confirm('Are you sure to reject this order ?');">
+                                Reject
+                            </a>
+                        </td>
+                    }
+                    else if (order.Status == 1)
+                    {
+                        <td> <p class="text text-success">Approved</p> </td>
+                        <td></td>
+
+                    }
+                    else if (order.Status == -1)
+                    {
+                        <td> <p class="text text-danger">Rejected</p> </td>
+                        <td></td>
+                    }
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Order" asp-action="Detail" asp-route-id="@order.Id">
+                            Detail
+                        </a>
+                        <a class="btn btn-danger" asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

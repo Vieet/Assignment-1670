@@ -1,0 +1,42 @@
+﻿
+
+<div class="container text-center mt-3">
+    @if (@TempData["Message"] != null)
+    {
+        <p class="alert alert-danger">@TempData["Message"]</p>
+    }
+    <table class="table table-bordered">
+        <tr>
+            <th colspan="3" class="h3 bg-light text-success">User Order List</th>
+        </tr>
+        <tr>
+            <th>User Email</th>
+            <th>Total Order</th>
+            <th>Total Payment</th>
+        </tr>
+        @foreach (var user in Model)
+        {
+            var count = 0;
+            var pay = 0;
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var order in ViewBag.Order)
+                    {
+
+                        if (user.Id == order.UserId)
+                        {
+                            count++;
+                                pay += order.Total;
+                        }
+
+                    }
+                    <p>@count</p>
+                </td>
+                <td>$@pay</td>
+
+            </tr>
+        }
+    </table>
+</div>
+

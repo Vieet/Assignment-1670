@@ -1,0 +1,25 @@
+﻿@model Assignment.Models.Order
+
+<h1 class="text text-center">Order Detail</h1>
+<div class="container col-md-6 text-center mt-3">
+    <table class="table table-bordered">
+        <tr>
+            <th colspan="4" class="h3 bg-light text-success">Order Id @Model.Id</th>
+        </tr>
+        <tr>
+            <th>Order Detail Id</th>
+            <th>Book Title</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        @foreach (var od in Model.OrderDetails)
+        {
+            <tr>
+                <td>@od.Id</td>
+                <td>@od.Book.Title</td>
+                <td>@od.Quantity</td>
+                <td>@od.Total</td>
+            </tr>
+        }
+    </table>
+</div>
